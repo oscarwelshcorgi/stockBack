@@ -43,7 +43,7 @@ public class MemberService {
                 });
     }
     /**
-     * 전체 회원 조회
+     * 전체 회원 리스트 조회
      */
     public List<Member> findMembers() {
         return memberRepository.findAll();
