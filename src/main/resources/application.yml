@@ -5,8 +5,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/study_db?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Seoul
-    username: study_db_user1
-    password: 12345678
+    username: root
+    password: 1234
 
   jpa:
     show-sql: true
