@@ -44,6 +44,10 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest, OAuth
 
         httpSession.setAttribute("member", new SessionUser(member));
 
+        System.out.println("getClientRegistration: " + userRequest.getClientRegistration());
+        System.out.println("getAccessToken: " + userRequest.getAccessToken().getTokenValue());
+        System.out.println("getAttributes: " + oAuth2User.getAttributes());
+
         return buildOAuth2User(member);
     }
 
@@ -61,11 +65,14 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest, OAuth
 
     // 유저 생성
     private Member save(OAuthAttributes attributes) {
-        Member member = memberRepository.findByEmail(attributes.getEmail())
-                //.map(entity -> entity.update(attributes.getName(), attributes.getPicture(), attributes.getProvider())) // email을 검색해 사용자가 존재하면 update
-                .orElse(attributes.toEntity()); // 비어있으면 새로운 데이터 insert
+        Member member = memberRepository.findByEmail(attributes.getEmail()).orElse(null); // email로 회원 조회
 
-        return memberRepository.save(member); //최종적으로 저장 or 업데이트 한다.
+        if (member == null) { // 회원이 존재하지 않는 경우에만 저장
+            member = attributes.toEntity(); // 새로운 회원 생성
+            member = memberRepository.save(member); // 회원 저장
+        }
+
+        return member; // 최종적으로 회원 반환
     }
 
     // 사용자 정보 업데이트 메서드

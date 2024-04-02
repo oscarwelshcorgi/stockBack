@@ -82,6 +82,7 @@ public class OAuthAttributes {
                 .picture(picture)
                 .provider(provider)
                 .role(Role.USER)
+                .createDate(LocalDateTime.now())
                 .build();
     }
 }
