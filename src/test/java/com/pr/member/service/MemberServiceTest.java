@@ -19,7 +19,7 @@ class MemberServiceTest {
     MemberService memberService;
 
     @Test
-    @DisplayName("회원가입 테스트")
+    @DisplayName("회원가입 테스트1")
     void join() {
         Member member = new Member();
         member.setName("테스트 name2");
