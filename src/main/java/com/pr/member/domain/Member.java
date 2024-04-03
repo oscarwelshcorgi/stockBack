@@ -32,7 +32,7 @@ public class Member {
     private String nickName;
     @Column(name= "picture")
     private String picture;
-    @Column(name= "createDate")
+    @Column(name= "role")
     @Enumerated(EnumType.STRING)
     private Role role;
     @Column(name= "createDate", nullable = false)
