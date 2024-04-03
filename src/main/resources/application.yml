@@ -16,3 +16,10 @@ spring:
 
   profiles:
     include: oauth
+
+# 정적 파일 서버 재시작 안하고 바로 반영
+  devtools:
+    restart:
+      enabled: 'false'
+    livereload:
+      enabled: 'true'

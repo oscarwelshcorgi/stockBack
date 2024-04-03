@@ -2,7 +2,7 @@ package com.pr.member.service;
 
 import com.pr.member.domain.Member;
 import com.pr.member.dto.OAuthAttributes;
-import com.pr.member.dto.SessionUser;
+import com.pr.member.dto.SessionMember;
 import com.pr.member.repository.MemberRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.GrantedAuthority;
@@ -42,7 +42,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest, OAuth
 
         Member member = save(attributes);
 
-        httpSession.setAttribute("member", new SessionUser(member));
+        httpSession.setAttribute("member", new SessionMember(member));
 
         System.out.println("getClientRegistration: " + userRequest.getClientRegistration());
         System.out.println("getAccessToken: " + userRequest.getAccessToken().getTokenValue());

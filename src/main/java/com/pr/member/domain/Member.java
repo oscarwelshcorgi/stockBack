@@ -20,21 +20,25 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(name= "id", nullable = false)
     private Long id;
-    @Column(nullable = false)
+    @Column(name= "email", nullable = false)
     private String email;
-    @Column(nullable = false)
+    @Column(name= "name", nullable = false)
     private String name;
-    @Column(nullable = false)
+    @Column(name= "provider", nullable = false)
     private String provider;
+    @Column(name= "nickName")
     private String nickName;
+    @Column(name= "picture")
     private String picture;
+    @Column(name= "createDate")
     @Enumerated(EnumType.STRING)
     private Role role;
-    @Column(nullable = false)
+    @Column(name= "createDate", nullable = false)
     @CreatedDate
     private LocalDateTime createDate;
+    @Column(name= "updateDate")
     @LastModifiedDate
     private LocalDateTime updateDate;
 
