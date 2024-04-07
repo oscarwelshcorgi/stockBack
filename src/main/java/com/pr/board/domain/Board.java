@@ -20,9 +20,11 @@ public class Board {
     private String content;
     @Column(name ="email", nullable = false)
     private String email;
+    @Column(name ="nickName", nullable = false)
+    private String nickName;
     @Column(name ="createDate", nullable = false)
     private LocalDateTime createDate;
-    @Column(name ="updateDate", nullable = false)
+    @Column(name ="updateDate")
     private LocalDateTime updateDate;
     @Column(name ="deleteYn", nullable = false)
     private String deleteYn;

@@ -18,4 +18,16 @@ public class BoardService {
         return boardList;
     }
 
+    public Long write(Board board){
+
+        boardRepository.save(board);
+
+        return board.getId();
+    }
+
+
+    public Board findById(Long id) {
+        return boardRepository.findById(id).orElse(null); // ID로 게시글 조회
+    }
+
 }
