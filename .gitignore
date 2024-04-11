@@ -37,4 +37,5 @@ out/
 .vscode/
 
 ### Social Login ###
-appication-oauth.yml
+application.yml
+application-oauth.yml
