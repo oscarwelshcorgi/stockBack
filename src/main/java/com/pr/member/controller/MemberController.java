@@ -13,7 +13,7 @@ public class MemberController {
 
     private final HttpSession httpSession;
 
-    @GetMapping("/")
+    @GetMapping("/home")
     public String home(Model model) {
         SessionMember member = (SessionMember) httpSession.getAttribute("member");
 
