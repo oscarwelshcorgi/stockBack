@@ -3,31 +3,28 @@ package com.pr.board.controller;
 import com.pr.board.domain.Board;
 import com.pr.board.dto.BoardDto;
 import com.pr.board.service.BoardService;
-import com.pr.member.dto.SessionMember;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
+@CrossOrigin
 public class BoardController {
 
     private final BoardService boardService;
 
     private final HttpSession httpSession;
-    @GetMapping("/board/list")
-    public String boardList(Model model) {
-        // 게시판 리스트 가져오기
-        model.addAttribute("boardList", boardService.getBoardList());
-        return "board";
+
+    //게시판 리스트 가져오기
+    @RequestMapping(value="/board/list", method=RequestMethod.GET)
+    public List<BoardDto> boardList() {
+        return boardService.getBoardList();
     }
 
+    /*
     @GetMapping("/board/write")
     public String write(Model model) {
         SessionMember member = (SessionMember) httpSession.getAttribute("member");
@@ -60,4 +57,5 @@ public class BoardController {
         model.addAttribute("board", board);
         return "detail";
     }
+     */
 }
