@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -16,35 +17,30 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
+    // 게시글 리스트 조회
     public List<BoardDto> getBoardList() {
-        List<Board> boardEntities = boardRepository.findAll();
-        List<BoardDto> dtos = new ArrayList<>();
-
-        for (Board board : boardEntities) {
-            BoardDto dto = BoardDto.builder()
-                    .id(board.getId())
-                    .nickName(board.getNickName())
-                    .title(board.getTitle())
-                    .content(board.getContent())
-                    .createDate(board.getCreateDate())
-                    .build();
-
-            dtos.add(dto);
-        }
+        List<BoardDto> dtos = boardRepository.findAll().stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
 
         return dtos;
     }
 
-    public Long write(Board board){
+    // 게시글 상세 조회
+    public BoardDto getBoardDetail(Long id) {
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
 
-        boardRepository.save(board);
-
-        return board.getId();
+        return convertToDto(board);
     }
 
-
-    public Board findById(Long id) {
-        return boardRepository.findById(id).orElse(null); // ID로 게시글 조회
+    private BoardDto convertToDto(Board board) {
+        return BoardDto.builder()
+                .id(board.getId())
+                .nickName(board.getNickName())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .createDate(board.getCreateDate())
+                .build();
     }
-
 }

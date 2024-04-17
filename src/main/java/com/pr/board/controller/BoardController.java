@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 @CrossOrigin
 public class BoardController {
@@ -22,6 +23,11 @@ public class BoardController {
     @RequestMapping(value="/board/list", method=RequestMethod.GET)
     public List<BoardDto> boardList() {
         return boardService.getBoardList();
+    }
+
+    @RequestMapping(value="/board/detail/{id}", method=RequestMethod.GET)
+    public BoardDto boardDetail(@PathVariable("id") Long id) {
+        return boardService.getBoardDetail(id);
     }
 
     /*
