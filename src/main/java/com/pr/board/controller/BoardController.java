@@ -29,39 +29,4 @@ public class BoardController {
     public BoardDto boardDetail(@PathVariable("id") Long id) {
         return boardService.getBoardDetail(id);
     }
-
-    /*
-    @GetMapping("/board/write")
-    public String write(Model model) {
-        SessionMember member = (SessionMember) httpSession.getAttribute("member");
-        model.addAttribute("member", member);
-        return "write";
-    }
-
-    @PostMapping("/board/writePost")
-    public String writePost(BoardDto boardDto) {
-
-        SessionMember member = (SessionMember) httpSession.getAttribute("member");
-
-        Board board = new Board();
-        board.setTitle(boardDto.getTitle());
-        board.setContent(boardDto.getContent());
-        board.setCreateDate(LocalDateTime.now());
-        board.setDeleteYn("N");
-        board.setEmail(member.getEmail());
-        board.setNickName(member.getNickName());
-
-        // 게시글을 저장하고 저장된 게시글의 ID를 반환
-        Long id = boardService.write(board);
-
-        return "redirect:/board/" + id;
-    }
-
-    @GetMapping("/board/detail/{id}")
-    public String showBoardDetails(@PathVariable("id") Long id, Model model) {
-        Board board = boardService.findById(id);
-        model.addAttribute("board", board);
-        return "detail";
-    }
-     */
 }

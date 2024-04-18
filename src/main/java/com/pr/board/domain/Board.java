@@ -1,6 +1,7 @@
 package com.pr.board.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "board")
+@Builder
 public class Board {
 
     @Id
