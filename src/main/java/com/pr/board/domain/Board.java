@@ -3,6 +3,7 @@ package com.pr.board.domain;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "board")
 @Builder
+@NoArgsConstructor
 public class Board {
 
     @Id
@@ -31,4 +33,15 @@ public class Board {
     @Column(name ="deleteYn", nullable = false)
     private String deleteYn;
 
+    @Builder
+    public Board(Long id, String title, String content, String email, String nickName, LocalDateTime createDate, LocalDateTime updateDate, String deleteYn) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.email = email;
+        this.nickName = nickName;
+        this.createDate = createDate;
+        this.updateDate = updateDate;
+        this.deleteYn = deleteYn;
+    }
 }
