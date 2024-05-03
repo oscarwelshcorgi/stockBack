@@ -25,8 +25,27 @@ public class BoardController {
         return boardService.getBoardList();
     }
 
+    //게시글 조회
     @RequestMapping(value="/board/detail/{id}", method=RequestMethod.GET)
     public BoardDto boardDetail(@PathVariable("id") Long id) {
         return boardService.getBoardDetail(id);
+    }
+
+    //게시글 작성
+    @RequestMapping(value="/board/create", method=RequestMethod.POST)
+    public BoardDto createBoard(@RequestBody BoardDto boardDto) {
+        return boardService.createBoard(boardDto);
+    }
+
+    //게시글 수정
+    @RequestMapping(value="/board/update", method=RequestMethod.PATCH)
+    public BoardDto updateBoard(@RequestBody BoardDto boardDto) {
+        return boardService.updateBoard(boardDto);
+    }
+
+    //게시글 삭제
+    @RequestMapping(value="/board/delete/{id}", method=RequestMethod.DELETE)
+    public void deleteBoard(@PathVariable("id") Long id) {
+        boardService.deleteBoard(id);
     }
 }

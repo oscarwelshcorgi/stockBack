@@ -44,4 +44,10 @@ public class Board {
         this.updateDate = updateDate;
         this.deleteYn = deleteYn;
     }
+
+    @PrePersist
+    public void prePersist() {
+        this.createDate = LocalDateTime.now(); // 엔티티가 저장되기 전에 작성 날짜 설정
+        this.deleteYn = "N";
+    }
 }
