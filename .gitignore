@@ -39,3 +39,6 @@ out/
 ### Social Login ###
 application.yml
 application-oauth.yml
+
+### QueryDSL ###
+generated

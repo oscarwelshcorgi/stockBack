@@ -2,8 +2,12 @@ package com.pr.board.service;
 
 import com.pr.board.domain.Board;
 import com.pr.board.dto.BoardDto;
+import com.pr.board.model.Header;
+import com.pr.board.model.Pagination;
 import com.pr.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
@@ -86,5 +90,31 @@ public class BoardService {
                 .content(boardDto.getContent())
                 .createDate(boardDto.getCreateDate()) // 생성일은 클라이언트에서 전달된 값 사용
                 .build();
+    }
+
+    public Header<List<BoardDto>> getBoardList(Pageable pageable) {
+        List<BoardDto> dtos = new ArrayList<>();
+
+        Page<Board> boardEntities = boardRepository.findAllByOrderByIdDesc(pageable);
+        for (Board entity : boardEntities) {
+            BoardDto dto = BoardDto.builder()
+                    .id(entity.getId())
+                    .nickName(entity.getNickName())
+                    .title(entity.getTitle())
+                    .content(entity.getContent())
+                    .createDate(entity.getCreateDate())
+                    .build();
+
+            dtos.add(dto);
+        }
+
+        Pagination pagination = new Pagination(
+                (int) boardEntities.getTotalElements()
+                , pageable.getPageNumber() + 1
+                , pageable.getPageSize()
+                , 10
+        );
+
+        return Header.OK(dtos, pagination);
     }
 }

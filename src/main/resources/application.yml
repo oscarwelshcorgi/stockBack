@@ -23,3 +23,7 @@ spring:
       enabled: 'false'
     livereload:
       enabled: 'true'
+
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: trace
