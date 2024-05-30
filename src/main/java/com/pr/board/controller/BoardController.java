@@ -4,6 +4,7 @@ import com.pr.board.domain.Board;
 import com.pr.board.dto.BoardDto;
 import com.pr.board.model.Header;
 import com.pr.board.service.BoardService;
+import com.pr.config.SearchCondition;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -24,8 +25,8 @@ public class BoardController {
 
     //게시판 리스트 가져오기
     @RequestMapping(value="/board/list", method=RequestMethod.GET)
-    public Header<List<BoardDto>> boardList(@PageableDefault(sort = {"id"}) Pageable pageable) {
-        return boardService.getBoardList(pageable);
+    public Header<List<BoardDto>> boardList(@PageableDefault(sort = {"id"}) Pageable pageable, SearchCondition searchCondition) {
+        return boardService.getBoardList(pageable, searchCondition);
     }
 
     //게시글 조회

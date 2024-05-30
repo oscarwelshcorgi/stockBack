@@ -1,10 +1,12 @@
 package com.pr.board.service;
 
 import com.pr.board.domain.Board;
+import com.pr.board.domain.BoardRepositoryCustom;
 import com.pr.board.dto.BoardDto;
 import com.pr.board.model.Header;
 import com.pr.board.model.Pagination;
 import com.pr.board.repository.BoardRepository;
+import com.pr.config.SearchCondition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,13 +22,25 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final BoardRepositoryCustom boardRepositoryCustom;
 
     // 게시글 리스트 조회
-    public List<BoardDto> getBoardList() {
+    public Header<List<BoardDto>> getBoardList(Pageable pageable, SearchCondition searchCondition) {
+        Page<Board> board = boardRepositoryCustom.findAllBySearchCondition(pageable, searchCondition);
+
         // Board 엔티티 리스트를 BoardDto 리스트로 변환하여 반환
-        return boardRepository.findAll().stream()
+        List<BoardDto> dtos = board.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+
+        // 페이징 정보 설정
+        Pagination pagination = new Pagination(
+                (int) board.getTotalElements(),
+                pageable.getPageNumber() + 1,
+                pageable.getPageSize(),
+                10
+        );
+        return Header.OK(dtos, pagination);
     }
 
     // 게시글 상세 조회
