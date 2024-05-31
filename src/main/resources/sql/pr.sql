@@ -12,6 +12,7 @@ create table member (
 );
 
 -- member 테이블 수정
+-- member 테이블 password 컬럼 삭제
 alter table member drop column password;
 alter table member add update_date date;
 
@@ -28,3 +29,22 @@ CREATE TABLE board (
 ) comment '게시판';
 
 insert into board (id, title, content, email, nick_name, delete_yn, create_date, update_date) values (1, 'test', 'content', 'asd@naver.com', 'nick', 'n', sysdate(), null);
+
+-- board 테이블 nick_name 컬럼 삭제. member 테이블에서 회원 email과 작성자 email이 같을 때 nick_name 가져옴
+alter table board drop column nick_name;
+
+-- member 테이블 member_info로 테이블명 변경
+rename table member to member_info;
+
+-- member_info 테이블
+create table member_info (
+	id int auto_increment not null primary key,
+	email varchar(100) not null,
+	name varchar(100),
+    provider varchar(50),
+    nick_name varchar(200),
+    picture varchar(300),
+    role varchar(50),
+	create_date timestamp default current_timestamp,
+    update_date date
+);

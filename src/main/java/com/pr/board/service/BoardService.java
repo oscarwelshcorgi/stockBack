@@ -7,12 +7,13 @@ import com.pr.board.model.Header;
 import com.pr.board.model.Pagination;
 import com.pr.board.repository.BoardRepository;
 import com.pr.config.SearchCondition;
+import com.pr.member.domain.MemberInfo;
+import com.pr.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final BoardRepositoryCustom boardRepositoryCustom;
+    private final MemberRepository memberRepository;
 
     // 게시글 리스트 조회
     public Header<List<BoardDto>> getBoardList(Pageable pageable, SearchCondition searchCondition) {
@@ -87,7 +89,7 @@ public class BoardService {
     private BoardDto convertToDto(Board board) {
         return BoardDto.builder()
                 .id(board.getId())
-                .nickName(board.getNickName())
+                .nickName(board.getMemberInfo().getNickName()) // member의 nickName 가져오기
                 .email(board.getEmail())
                 .title(board.getTitle())
                 .content(board.getContent())
@@ -97,8 +99,11 @@ public class BoardService {
 
     // DTO -> Entity 변환 메서드
     private Board convertToEntity(BoardDto boardDto) {
+        MemberInfo memberInfo = memberRepository.findByEmail(boardDto.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("Member not found with email: " + boardDto.getEmail()));
+
         return Board.builder()
-                .nickName(boardDto.getNickName())
+                .memberInfo(memberInfo)
                 .email(boardDto.getEmail())
                 .title(boardDto.getTitle())
                 .content(boardDto.getContent())
@@ -113,7 +118,7 @@ public class BoardService {
         for (Board entity : boardEntities) {
             BoardDto dto = BoardDto.builder()
                     .id(entity.getId())
-                    .nickName(entity.getNickName())
+                    .nickName(entity.getMemberInfo().getNickName()) // Member 엔티티를 통해 nickName 접근
                     .title(entity.getTitle())
                     .content(entity.getContent())
                     .createDate(entity.getCreateDate())

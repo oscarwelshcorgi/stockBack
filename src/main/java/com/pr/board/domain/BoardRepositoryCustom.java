@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 
 import static com.pr.board.domain.QBoard.board;
+import static com.pr.member.domain.QMemberInfo.memberInfo;
 
 @RequiredArgsConstructor
 @Repository
@@ -39,7 +40,7 @@ public class BoardRepositoryCustom {
     private BooleanExpression searchKeywords(String sk, String sv) {
         if("nickName".equals(sk)) {
             if(StringUtils.hasLength(sv)) {
-                return board.nickName.contains(sv);
+                return memberInfo.nickName.contains(sv);
             }
         } else if ("title".equals(sk)) {
             if(StringUtils.hasLength(sv)) {

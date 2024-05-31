@@ -1,18 +1,16 @@
 package com.pr.board.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.pr.member.domain.MemberInfo;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
 @Data
 @Entity
 @Table(name = "board")
-@Builder
 @NoArgsConstructor
 public class Board {
 
@@ -26,8 +24,6 @@ public class Board {
     private String content;
     @Column(name ="email", nullable = false)
     private String email;
-    @Column(name ="nickName", nullable = false)
-    private String nickName;
     @Column(name ="createDate", nullable = false)
     private LocalDateTime createDate;
     @Column(name ="updateDate")
@@ -35,16 +31,20 @@ public class Board {
     @Column(name ="deleteYn", nullable = false)
     private String deleteYn;
 
+    @ManyToOne
+    @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false)
+    private MemberInfo memberInfo;
+
     @Builder
-    public Board(Long id, String title, String content, String email, String nickName, LocalDateTime createDate, LocalDateTime updateDate, String deleteYn) {
+    public Board(Long id, String title, String content, String email, LocalDateTime createDate, LocalDateTime updateDate, String deleteYn, MemberInfo memberInfo) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.email = email;
-        this.nickName = nickName;
         this.createDate = createDate;
         this.updateDate = updateDate;
         this.deleteYn = deleteYn;
+        this.memberInfo = memberInfo;
     }
 
     @PrePersist

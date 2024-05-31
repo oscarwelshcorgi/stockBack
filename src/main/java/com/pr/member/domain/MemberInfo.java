@@ -11,12 +11,12 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "member")
+@Table(name = "member_info")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-public class Member {
+public class MemberInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +42,7 @@ public class Member {
     @LastModifiedDate
     private LocalDateTime updateDate;
 
-    public Member update(String nickName, LocalDateTime updateDate) {
+    public MemberInfo update(String nickName, LocalDateTime updateDate) {
         this.nickName = nickName;
         this.updateDate = LocalDateTime.now();;
         return this;

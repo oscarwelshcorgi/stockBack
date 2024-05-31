@@ -1,6 +1,6 @@
 package com.pr.member.service;
 
-import com.pr.member.domain.Member;
+import com.pr.member.domain.MemberInfo;
 import com.pr.member.dto.OAuthAttributes;
 import com.pr.member.dto.SessionMember;
 import com.pr.member.repository.MemberRepository;
@@ -40,39 +40,39 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest, OAuth
         // OauthUserService
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
-        Member member = save(attributes);
+        MemberInfo memberInfo = save(attributes);
 
-        httpSession.setAttribute("member", new SessionMember(member));
+        httpSession.setAttribute("memberInfo", new SessionMember(memberInfo));
 
         System.out.println("getClientRegistration: " + userRequest.getClientRegistration());
         System.out.println("getAccessToken: " + userRequest.getAccessToken().getTokenValue());
         System.out.println("getAttributes: " + oAuth2User.getAttributes());
 
-        return buildOAuth2User(member);
+        return buildOAuth2User(memberInfo);
     }
 
     // OAuth2User 객체 생성
-    private OAuth2User buildOAuth2User(Member member) {
-        Set<GrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority(member.getRoleKey()));
+    private OAuth2User buildOAuth2User(MemberInfo memberInfo) {
+        Set<GrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority(memberInfo.getRoleKey()));
         Map<String, Object> attributes = Map.of(
-                "email", member.getEmail(),
-                "name", member.getName(),
-                "picture", member.getPicture()
+                "email", memberInfo.getEmail(),
+                "name", memberInfo.getName(),
+                "picture", memberInfo.getPicture()
         );
 
         return new DefaultOAuth2User(authorities, attributes, "email");
     }
 
     // 유저 생성
-    private Member save(OAuthAttributes attributes) {
-        Member member = memberRepository.findByEmail(attributes.getEmail()).orElse(null); // email로 회원 조회
+    private MemberInfo save(OAuthAttributes attributes) {
+        MemberInfo memberInfo = memberRepository.findByEmail(attributes.getEmail()).orElse(null); // email로 회원 조회
 
-        if (member == null) { // 회원이 존재하지 않는 경우에만 저장
-            member = attributes.toEntity(); // 새로운 회원 생성
-            member = memberRepository.save(member); // 회원 저장
+        if (memberInfo == null) { // 회원이 존재하지 않는 경우에만 저장
+            memberInfo = attributes.toEntity(); // 새로운 회원 생성
+            memberInfo = memberRepository.save(memberInfo); // 회원 저장
         }
 
-        return member; // 최종적으로 회원 반환
+        return memberInfo; // 최종적으로 회원 반환
     }
 
     // 사용자 정보 업데이트 메서드
@@ -81,7 +81,7 @@ public class MemberService implements OAuth2UserService<OAuth2UserRequest, OAuth
                 .ifPresent(entity -> entity.update(attributes.getNickName(), attributes.getUpdateDate()));
     }
 
-    public List<Member> findAllMembers() {
+    public List<MemberInfo> findAllMembers() {
         return memberRepository.findAll();
     }
 

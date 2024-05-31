@@ -1,6 +1,6 @@
 package com.pr.member.dto;
 
-import com.pr.member.domain.Member;
+import com.pr.member.domain.MemberInfo;
 import com.pr.member.domain.Role;
 import lombok.Builder;
 import lombok.Data;
@@ -75,8 +75,8 @@ public class OAuthAttributes {
                     .build();
         }
     */
-    public Member toEntity() {
-        return Member.builder()
+    public MemberInfo toEntity() {
+        return MemberInfo.builder()
                 .name(name)
                 .email(email)
                 .picture(picture)

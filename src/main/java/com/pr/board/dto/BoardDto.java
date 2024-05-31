@@ -15,7 +15,7 @@ public class BoardDto {
     private String title;
     private String content;
     private String email;
-    private String nickName;
+    private String nickName; // member 테이블의 nickName 가져옴
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yy.MM.dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
