@@ -20,4 +20,5 @@ public class BoardDto {
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
     private String deleteYn;
+    private int viewCount;
 }

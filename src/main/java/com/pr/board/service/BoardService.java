@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BoardService {
 
     private final BoardRepository boardRepository;
@@ -49,6 +51,8 @@ public class BoardService {
     public BoardDto getBoardDetail(Long id) {
         // ID로 게시글을 조회하여 BoardDto로 변환하여 반환
         Board board = findBoardById(id);
+        board.setViewCount(board.getViewCount() + 1); // 조회수 증가
+        System.out.println(board.getViewCount() + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         return convertToDto(board);
     }
 
@@ -94,6 +98,7 @@ public class BoardService {
                 .title(board.getTitle())
                 .content(board.getContent())
                 .createDate(board.getCreateDate())
+                .viewCount(board.getViewCount())
                 .build();
     }
 
@@ -108,6 +113,7 @@ public class BoardService {
                 .title(boardDto.getTitle())
                 .content(boardDto.getContent())
                 .createDate(boardDto.getCreateDate()) // 생성일은 클라이언트에서 전달된 값 사용
+                .viewCount(boardDto.getViewCount())
                 .build();
     }
 
@@ -122,6 +128,7 @@ public class BoardService {
                     .title(entity.getTitle())
                     .content(entity.getContent())
                     .createDate(entity.getCreateDate())
+                    .viewCount(entity.getViewCount())
                     .build();
 
             dtos.add(dto);
@@ -136,4 +143,7 @@ public class BoardService {
 
         return Header.OK(dtos, pagination);
     }
+
+
+
 }

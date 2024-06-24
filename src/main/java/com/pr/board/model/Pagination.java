@@ -10,40 +10,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class Pagination {
-    //페이지당 보여지는 게시글 최대 개수
-    private int pageSize;
-
-    //현재 페이지
-    int page;
-
-    //현재 블럭
-    int block;
-
-    //총 게시글 수
-    int totalListCnt;
-
-    //총 페이지 수
-    int totalPageCnt;
-
-    //총 구간 수
-    int totalBlockCnt;
-
-    //시작 페이지
-    int startPage;
-
-    //마지막 페이지
-    int endPage;
-
-    // 이전 구간 마지막 페이지
-    int prevBlock;
-
-    // 다음 구간 시작 페이지
-    int nextBlock;
-
-    // 인덱스
-    int startIndex;
+    private int pageSize;         // 페이지당 보여지는 게시글 최대 개수
+    private int page;             // 현재 페이지
+    private int block;            // 현재 블럭
+    private int totalListCnt;     // 총 게시글 수
+    private int totalPageCnt;     // 총 페이지 수
+    private int totalBlockCnt;    // 총 블럭 수
+    private int startPage;        // 시작 페이지
+    private int endPage;          // 마지막 페이지
+    private int prevBlock;        // 이전 구간 마지막 페이지
+    private int nextBlock;        // 다음 구간 시작 페이지
+    private int startIndex;       // 시작 인덱스
 
     public Pagination(Integer totalListCnt, Integer page, Integer pageSize, Integer blockSize) {
+        // 페이지당 보여지는 게시글 최대 개수
         this.pageSize = pageSize;
 
         //현재 페이지
@@ -52,40 +32,32 @@ public class Pagination {
         //총 게시글 수
         this.totalListCnt = totalListCnt;
 
-        //총 페이지 수
-        totalPageCnt = (int) Math.ceil(totalListCnt * 1.0 / this.pageSize);
+        calculatePagination(blockSize);
+    }
 
-        //총 블럭 수
-        totalBlockCnt = (int) Math.ceil(totalPageCnt * 1.0 / blockSize);
+    private void calculatePagination(int blockSize){
+        // 총 페이지 수 계산
+        totalPageCnt = (int) Math.ceil((double) totalListCnt / pageSize);
 
-        //현재 블럭
-        block = (int) Math.ceil((this.page * 1.0) / blockSize);
+        // 총 블럭 수 계산
+        totalBlockCnt = (int) Math.ceil((double) totalPageCnt / blockSize);
 
-        //if(block < 1) block = 1
+        // 현재 블럭 계산
+        block = (int) Math.ceil((double) page / blockSize);
 
-        //블럭 시작 페이지
-        startPage = ((block - 1) * blockSize + 1);
+        // 블럭 시작 페이지 계산
+        startPage = (block - 1) * blockSize + 1;
 
-        //블럭 마지막 페이지
-        endPage = startPage + blockSize - 1;
+        // 블럭 마지막 페이지 계산
+        endPage = Math.min(startPage + blockSize - 1, totalPageCnt);
 
-        //블럭 마지막 페이지 validation
-        if (endPage > totalPageCnt) endPage = totalPageCnt;
+        // 이전 블럭 계산
+        prevBlock = Math.max((block - 1) * blockSize, 1);
 
-        // 이전 블럭 (클릭 시, 이전 블럭 마지막 페이지)
-        prevBlock = (block * blockSize) - blockSize;
+        // 다음 블럭 계산
+        nextBlock = Math.min(block * blockSize + 1, totalPageCnt);
 
-        // 이전 블럭 validation
-        if (prevBlock < 1) prevBlock = 1;
-
-        //다음 블럭 (클릭 시, 다음 블럭 첫번째 페이지)
-        nextBlock = (block * blockSize + 1);
-
-        // 다음 블럭 validation
-        if (nextBlock > totalPageCnt) nextBlock = totalPageCnt;
-
-        //if(this.page < 1) this.page = 1
-
-        startIndex = (this.page - 1) * this.pageSize;
+        // 시작 인덱스 계산
+        startIndex = (page - 1) * pageSize;
     }
 }

@@ -48,3 +48,6 @@ create table member_info (
 	create_date timestamp default current_timestamp,
     update_date date
 );
+
+-- 조회수 추가
+alter table board add column view_count int default 0;
