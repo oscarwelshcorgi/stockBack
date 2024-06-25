@@ -51,8 +51,15 @@ public class BoardService {
     public BoardDto getBoardDetail(Long id) {
         // ID로 게시글을 조회하여 BoardDto로 변환하여 반환
         Board board = findBoardById(id);
+        return convertToDto(board);
+    }
+
+    // 게시글 조회수 증가
+    public BoardDto getIncreaseViewCount(Long id) {
+        // ID로 게시글을 조회하여 BoardDto로 변환하여 반환
+        Board board = findBoardById(id);
         board.setViewCount(board.getViewCount() + 1); // 조회수 증가
-        System.out.println(board.getViewCount() + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        System.out.println("조회수 증가!!!!: " + board.getViewCount());
         return convertToDto(board);
     }
 
