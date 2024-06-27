@@ -2,6 +2,7 @@ package com.pr.board.controller;
 
 import com.pr.board.dto.BoardDto;
 import com.pr.board.model.Header;
+import com.pr.board.repository.BoardRepository;
 import com.pr.board.service.BoardService;
 import com.pr.config.SearchCondition;
 import jakarta.servlet.http.HttpSession;
@@ -11,6 +12,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -19,6 +21,8 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
+
+    private final BoardRepository boardRepository;
 
     private final HttpSession httpSession;
 
@@ -31,6 +35,21 @@ public class BoardController {
     //게시글 조회
     @RequestMapping(value="/board/detail/{id}", method=RequestMethod.GET)
     public BoardDto boardDetail(@PathVariable("id") Long id) {
+        Optional<Long> nextBoardIdOptional = boardRepository.findNextBoardId(id); // 다음 게시글 id
+        Optional<Long> previousBoardIdOptional = boardRepository.findPreviousBoardId(id); // 이전 게시글 id
+
+        // Optional에서 값 추출
+        Long nextBoardId = nextBoardIdOptional.orElse(null);
+        Long previousBoardId = previousBoardIdOptional.orElse(null);
+
+        // 로그 출력
+        System.out.println(nextBoardId + "@@@@@@@" + previousBoardId);
+
+        // BoardDto 반환
+        BoardDto boardDto = boardService.getBoardDetail(id);
+        boardDto.setNextBoardId(nextBoardId);
+        boardDto.setPreviousBoardId(previousBoardId);
+
         return boardService.getBoardDetail(id);
     }
 

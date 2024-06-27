@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,16 +31,19 @@ public class BoardService {
 
     // 게시글 리스트 조회
     public Header<List<BoardDto>> getBoardList(Pageable pageable, SearchCondition searchCondition) {
-        Page<Board> board = boardRepositoryCustom.findAllBySearchCondition(pageable, searchCondition);
+        Page<Board> boardPage = boardRepositoryCustom.findAllBySearchCondition(pageable, searchCondition);
 
         // Board 엔티티 리스트를 BoardDto 리스트로 변환하여 반환
-        List<BoardDto> dtos = board.stream()
-                .map(this::convertToDto)
+        List<BoardDto> dtos = boardPage.stream()
+                .map(board -> {
+                    // BoardDto로 변환하여 반환
+                    return convertToDto(board, null, null);
+                })
                 .collect(Collectors.toList());
 
         // 페이징 정보 설정
         Pagination pagination = new Pagination(
-                (int) board.getTotalElements(),
+                (int) boardPage.getTotalElements(),
                 pageable.getPageNumber() + 1,
                 pageable.getPageSize(),
                 10
@@ -51,7 +55,9 @@ public class BoardService {
     public BoardDto getBoardDetail(Long id) {
         // ID로 게시글을 조회하여 BoardDto로 변환하여 반환
         Board board = findBoardById(id);
-        return convertToDto(board);
+        Long nextBoardId = boardRepository.findNextBoardId(board.getId()).orElse(null);
+        Long previousBoardId = boardRepository.findPreviousBoardId(board.getId()).orElse(null);
+        return convertToDto(board, nextBoardId, previousBoardId);
     }
 
     // 게시글 조회수 증가
@@ -59,8 +65,8 @@ public class BoardService {
         // ID로 게시글을 조회하여 BoardDto로 변환하여 반환
         Board board = findBoardById(id);
         board.setViewCount(board.getViewCount() + 1); // 조회수 증가
-        System.out.println("조회수 증가!!!!: " + board.getViewCount());
-        return convertToDto(board);
+        System.out.println("ViewCount 조회수 증가!!!!: " + board.getViewCount());
+        return convertToDto(board, null, null);
     }
 
     // 게시글 등록
@@ -80,7 +86,7 @@ public class BoardService {
         board.setTitle(boardDto.getTitle());
         board.setContent(boardDto.getContent());
         boardRepository.save(board);
-        return convertToDto(board);
+        return convertToDto(board, null, null);
     }
 
     // 게시글 삭제
@@ -97,7 +103,7 @@ public class BoardService {
     }
 
     // Entity -> DTO 변환 메서드
-    private BoardDto convertToDto(Board board) {
+    private BoardDto convertToDto(Board board, Long nextBoardId, Long previousBoardId) {
         return BoardDto.builder()
                 .id(board.getId())
                 .nickName(board.getMemberInfo().getNickName()) // member의 nickName 가져오기
@@ -106,6 +112,8 @@ public class BoardService {
                 .content(board.getContent())
                 .createDate(board.getCreateDate())
                 .viewCount(board.getViewCount())
+                .nextBoardId(nextBoardId)
+                .previousBoardId(previousBoardId)
                 .build();
     }
 
