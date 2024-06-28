@@ -35,10 +35,7 @@ public class BoardService {
 
         // Board 엔티티 리스트를 BoardDto 리스트로 변환하여 반환
         List<BoardDto> dtos = boardPage.stream()
-                .map(board -> {
-                    // BoardDto로 변환하여 반환
-                    return convertToDto(board, null, null);
-                })
+                .map(board -> convertToDto(board, null, null))
                 .collect(Collectors.toList());
 
         // 페이징 정보 설정

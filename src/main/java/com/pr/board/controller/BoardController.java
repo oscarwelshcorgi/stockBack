@@ -35,17 +35,11 @@ public class BoardController {
     //게시글 조회
     @RequestMapping(value="/board/detail/{id}", method=RequestMethod.GET)
     public BoardDto boardDetail(@PathVariable("id") Long id) {
-        Optional<Long> nextBoardIdOptional = boardRepository.findNextBoardId(id); // 다음 게시글 id
-        Optional<Long> previousBoardIdOptional = boardRepository.findPreviousBoardId(id); // 이전 게시글 id
+        // 다음 게시글 id와 이전 게시글 id를 조회한다
+        Long nextBoardId = boardRepository.findNextBoardId(id).orElse(null);
+        Long previousBoardId = boardRepository.findPreviousBoardId(id).orElse(null);
 
-        // Optional에서 값 추출
-        Long nextBoardId = nextBoardIdOptional.orElse(null);
-        Long previousBoardId = previousBoardIdOptional.orElse(null);
-
-        // 로그 출력
-        System.out.println(nextBoardId + "@@@@@@@" + previousBoardId);
-
-        // BoardDto 반환
+        // BoardDto를 조회하여 반환한다
         BoardDto boardDto = boardService.getBoardDetail(id);
         boardDto.setNextBoardId(nextBoardId);
         boardDto.setPreviousBoardId(previousBoardId);
