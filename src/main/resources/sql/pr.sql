@@ -19,7 +19,7 @@ alter table member add update_date date;
 -- board 테이블 생성
 CREATE TABLE board (
 	id int auto_increment not null primary key comment 'PK',
-    title varchar(100) not null comment '제목',
+    title varchar(500) not null comment '제목',
     content varchar(3000) not null comment '내용',
     email varchar(30) not null comment '작성자',
     nick_name varchar(30) not null comment '닉네임',
