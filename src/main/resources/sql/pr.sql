@@ -51,3 +51,36 @@ create table member_info (
 
 -- 조회수 추가
 alter table board add column view_count int default 0;
+
+
+
+
+
+
+
+
+-- 테이블 생성 최종
+-- board 테이블 생성
+CREATE TABLE board (
+	id int auto_increment not null primary key comment 'PK',
+    title varchar(500) not null comment '제목',
+    content varchar(3000) not null comment '내용',
+    email varchar(30) not null comment '작성자',
+    delete_yn varchar(5) not null comment '삭제 여부',
+    create_date datetime not null DEFAULT current_timestamp() comment '생성일시',
+	update_date datetime default null comment '최종 수정일시',
+	view_count int default 0 comment '조회수'
+) comment '게시판';
+
+-- member_info 테이블
+create table member_info (
+	id int auto_increment not null primary key,
+	email varchar(100) not null,
+	name varchar(100),
+    provider varchar(50),
+    nick_name varchar(200),
+    picture varchar(300),
+    role varchar(50),
+	create_date timestamp default current_timestamp,
+    update_date date
+);
