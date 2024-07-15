@@ -69,14 +69,26 @@ grant all privileges on dongga_db.* to 'dongga_admin1'@'%';
 
 -- board 테이블 생성
 CREATE TABLE board (
+   id int auto_increment not null primary key comment 'PK',
+   board_code varchar(50) not null comment '게시판코드',
+   board_name varchar(50) not null comment '게시판이름',
+   create_date datetime not null default current_timestamp() comment '게시판생성날짜',
+   update_date datetime not null comment '게시판수정날짜',
+   UNIQUE KEY `board_code` (`board_code`),
+   UNIQUE KEY `board_name` (`board_name`)
+);
+
+-- article 테이블 생성
+CREATE TABLE article (
 	id int auto_increment not null primary key comment 'PK',
     title varchar(500) not null comment '제목',
     content varchar(3000) not null comment '내용',
     email varchar(30) not null comment '작성자',
-    delete_yn varchar(5) not null comment '삭제 여부',
-    create_date datetime not null DEFAULT current_timestamp() comment '생성일시',
-	update_date datetime default null comment '최종 수정일시',
-	view_count int default 0 comment '조회수'
+    delete_yn varchar(5) not null comment '삭제여부',
+    create_date datetime not null default current_timestamp() comment '생성일시',
+	update_date datetime default null comment '최종수정일시',
+	view_count int default 0 comment '조회수',
+    board_code varchar(30) not null comment '게시판코드'
 ) comment '게시판';
 
 -- member_info 테이블

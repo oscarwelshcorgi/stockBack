@@ -32,13 +32,15 @@ public class Board {
     private String deleteYn;
     @Column(name = "viewCount", nullable = true)
     private int viewCount;
+    @Column(name = "boardCode", nullable = false)
+    private String boardCode;
 
     @ManyToOne
     @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false)
     private MemberInfo memberInfo;
 
     @Builder
-    public Board(Long id, String title, String content, String email, LocalDateTime createDate, LocalDateTime updateDate, String deleteYn, int viewCount, MemberInfo memberInfo) {
+    public Board(Long id, String title, String content, String email, LocalDateTime createDate, LocalDateTime updateDate, String deleteYn, int viewCount, String boardCode, MemberInfo memberInfo) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -47,6 +49,7 @@ public class Board {
         this.updateDate = updateDate;
         this.deleteYn = deleteYn;
         this.viewCount = viewCount;
+        this.boardCode = boardCode;
         this.memberInfo = memberInfo;
     }
 

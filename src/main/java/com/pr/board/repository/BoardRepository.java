@@ -16,6 +16,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     //List<Board> findAll();
     Page<Board> findAllByOrderByIdDesc(Pageable pageable);
 
+    // board_code가 특정 값인 게시글 조회
+    List<Board> findByBoardCode(String boardCode);
+
     @Query("SELECT MAX(b.id) FROM Board b WHERE b.id < ?1")
     Optional<Long> findPreviousBoardId(Long currentId); // 이전 게시글(예] 현재 id=10 일 때, 11로 이동)
     @Query("SELECT MIN(b.id) FROM Board b WHERE b.id > ?1")

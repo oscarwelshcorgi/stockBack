@@ -23,4 +23,5 @@ public class BoardDto {
     private int viewCount;
     private Long previousBoardId;
     private Long nextBoardId;
+    private String boardCode;
 }

@@ -32,6 +32,12 @@ public class BoardService {
     // 게시글 리스트 조회
     public Header<List<BoardDto>> getBoardList(Pageable pageable, SearchCondition searchCondition) {
         Page<Board> boardPage = boardRepositoryCustom.findAllBySearchCondition(pageable, searchCondition);
+        // board_code가 "humor"인 게시글만 조회
+        List<Board> boards = boardRepository.findByBoardCode("humor");
+        // 필터링된 결과를 페이지 처리합니다.
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), boards.size());
+        List<Board> pagedBoards = boards.subList(start, end);
 
         // Board 엔티티 리스트를 BoardDto 리스트로 변환하여 반환
         List<BoardDto> dtos = boardPage.stream()
@@ -111,6 +117,7 @@ public class BoardService {
                 .viewCount(board.getViewCount())
                 .nextBoardId(nextBoardId)
                 .previousBoardId(previousBoardId)
+                .boardCode(board.getBoardCode())
                 .build();
     }
 
@@ -126,6 +133,7 @@ public class BoardService {
                 .content(boardDto.getContent())
                 .createDate(boardDto.getCreateDate()) // 생성일은 클라이언트에서 전달된 값 사용
                 .viewCount(boardDto.getViewCount())
+                .boardCode(boardDto.getBoardCode())
                 .build();
     }
 
@@ -141,6 +149,7 @@ public class BoardService {
                     .content(entity.getContent())
                     .createDate(entity.getCreateDate())
                     .viewCount(entity.getViewCount())
+                    .boardCode(entity.getBoardCode())
                     .build();
 
             dtos.add(dto);
