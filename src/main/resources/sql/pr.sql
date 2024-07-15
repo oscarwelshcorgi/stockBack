@@ -60,6 +60,13 @@ alter table board add column view_count int default 0;
 
 
 -- 테이블 생성 최종
+-- database 생성
+create database dongga_db default character set UTF8;
+-- db 계정 생성
+create user 'dongga_admin1'@'%' identified by 't*@';
+-- db dongga_admin 계정에 dongga_db db에 모든 권한 부여
+grant all privileges on dongga_db.* to 'dongga_admin1'@'%';
+
 -- board 테이블 생성
 CREATE TABLE board (
 	id int auto_increment not null primary key comment 'PK',

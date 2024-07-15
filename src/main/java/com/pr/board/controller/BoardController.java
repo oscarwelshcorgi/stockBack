@@ -70,4 +70,11 @@ public class BoardController {
     public BoardDto increaseViewCount(@PathVariable("id") Long id) {
         return boardService.getIncreaseViewCount(id);
     }
+
+    //예전 게시판 백업
+    @RequestMapping(value="/usr/article/m.detail", method=RequestMethod.GET)
+    public BoardDto boardDetailBackup(@PathVariable("id") Long id) {
+        return boardService.getBoardDetail(id);
+    }
+
 }
