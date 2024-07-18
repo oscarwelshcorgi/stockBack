@@ -1,10 +1,9 @@
 package com.pr.util.sitemap;
 
-import com.pr.board.domain.Board;
+import com.pr.board.domain.Article;
 import com.pr.board.repository.BoardRepository;
 import jakarta.servlet.ServletContext;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,7 @@ public class SitemapCreate {
     public void generateSitemap() {
         try {
             // 실제 sitemap 생성 로직
-            List<Board> boards = boardRepository.findAll();
+            List<Article> articles = boardRepository.findAll();
 
             // 절대 경로 얻기
             String rootPath = servletContext.getRealPath("/");
@@ -39,9 +38,9 @@ public class SitemapCreate {
             out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             out.println("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">");
 
-            for (Board board : boards) {
+            for (Article article : articles) {
                 out.println("<url>");
-                out.println("<loc>https://dongga.net/Board/" + board.getId() + "</loc>"); // 예시 URL
+                out.println("<loc>https://dongga.net/Board/" + article.getId() + "</loc>"); // 예시 URL
                 out.println("<changefreq>daily</changefreq>"); // 변경 빈도 설정 (예: 매일 변경)
                 out.println("</url>");
             }
