@@ -82,7 +82,7 @@ CREATE TABLE board (
 CREATE TABLE article (
 	id int auto_increment not null primary key comment 'PK',
     title varchar(500) not null comment '제목',
-    content varchar(3000) not null comment '내용',
+    content text not null comment '내용',
     email varchar(30) not null comment '작성자',
     delete_yn varchar(5) not null comment '삭제여부',
     create_date datetime not null default current_timestamp() comment '생성일시',

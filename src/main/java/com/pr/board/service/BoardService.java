@@ -49,7 +49,7 @@ public class BoardService {
                 (int) boardPage.getTotalElements(),
                 pageable.getPageNumber() + 1,
                 pageable.getPageSize(),
-                10
+                5
         );
         return Header.OK(dtos, pagination);
     }

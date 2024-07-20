@@ -31,7 +31,7 @@ public class JjangPaser {
     private String dbPassword;
 
     //@Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
-    @Scheduled(cron = "0 40 23 * * ?")
+    @Scheduled(cron = "0 30 17 * * ?")
     public void parseWebsiteAndStoreInDatabase() {
         Timestamp currentDate = new Timestamp(new Date().getTime());
 
@@ -42,7 +42,7 @@ public class JjangPaser {
             try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
                 System.out.println("MySQL 연결 성공");
 
-                for (int page = 1; page < 2; page++) {
+                for (int page = 1; page < 3; page++) {
                     String url = "https://www.jjang0u.com/board/list/fun/" + page;
                     Document doc = Jsoup.connect(url).get();
                     Elements titles = doc.select(".title a");
@@ -54,8 +54,8 @@ public class JjangPaser {
                         String content = parseContent(postUrl);
 
                         // content에 "oembed" 문자열이 포함되어 있는지 확인
-                        if (content.contains("oembed")) {
-                            System.out.println("oembed 포함된 글은 저장하지 않습니다.");
+                        if (content.contains("oembed") || content.contains("ytp-muted-autoplay-endscreen-overlay")) {
+                            System.out.println("oembed, ytp 포함된 글은 저장하지 않습니다.");
                             continue; // oembed 포함된 글은 저장하지 않고 다음 글로 넘어감
                         }
 
@@ -77,20 +77,39 @@ public class JjangPaser {
     }
 
     private void insertIntoDatabase(Connection conn, String title, String content, Timestamp date) throws SQLException {
-        String sql = "INSERT INTO board (id, title, content, email, delete_yn, create_date, update_date, view_count) " +
-                "VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO article (id, title, content, email, delete_yn, create_date, update_date, view_count, board_code) " +
+                "VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, title);
-            pstmt.setString(2, content + "&nbsp");
+            pstmt.setString(2, addWidthToImages(content) + "&nbsp"); // <img> 태그에 width 추가
             pstmt.setString(3, "oscarwelshcorgi@gmail.com");
             pstmt.setString(4, "n");
             pstmt.setTimestamp(5, date);
             pstmt.setTimestamp(6, date);
             pstmt.setString(7, "100");
+            pstmt.setString(8, "humor");
 
             pstmt.executeUpdate();
             System.out.println("INSERT 실행: " + sql);
         }
+    }
+
+    private String addWidthToImages(String content) {
+        Document doc = Jsoup.parse(content);
+
+        // 이미지 태그에 width 스타일 추가
+        Elements imgElements = doc.select("img");
+        for (Element img : imgElements) {
+            img.attr("style", "width:100%;"); // 이미지 태그에 style 속성 추가
+        }
+
+        // 비디오 태그에 width 스타일 추가
+        Elements videoElements = doc.select("video");
+        for (Element video : videoElements) {
+            video.attr("style", "width:100%;"); // 비디오 태그에 style 속성 추가
+        }
+
+        return doc.html();
     }
 }
