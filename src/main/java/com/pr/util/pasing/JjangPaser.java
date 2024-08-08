@@ -31,7 +31,7 @@ public class JjangPaser {
     private String dbPassword;
 
     //@Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
-    @Scheduled(cron = "0 30 17 * * ?")
+    @Scheduled(cron = "0 30 11 * * ?") // 리눅스 서버랑 6시간 차이남. 리눅스가 6시간 느림.
     public void parseWebsiteAndStoreInDatabase() {
         Timestamp currentDate = new Timestamp(new Date().getTime());
 

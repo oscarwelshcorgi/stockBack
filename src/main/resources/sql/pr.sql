@@ -103,3 +103,15 @@ create table member_info (
 	create_date timestamp default current_timestamp,
     update_date date
 );
+
+-- comment 테이블
+CREATE TABLE Comments (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY comment 'pk',
+    article_id INT NOT NULL comment '게시글 id',
+    content TEXT comment '댓글 내용',
+    email varchar(30) not null comment '댓글작성자email',
+    comment_delete_yn varchar(5) not null comment '댓글삭제여부',
+    create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP comment '댓글작성일시',
+    update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '댓글수정일시',
+    FOREIGN KEY (article_id) REFERENCES article(id) ON DELETE CASCADE
+);
