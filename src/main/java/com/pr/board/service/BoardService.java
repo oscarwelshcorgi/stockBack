@@ -5,7 +5,7 @@ import com.pr.board.domain.BoardRepositoryCustom;
 import com.pr.board.dto.BoardDto;
 import com.pr.board.model.Header;
 import com.pr.board.model.Pagination;
-import com.pr.board.repository.BoardRepository;
+import com.pr.board.repository.ArticleRepository;
 import com.pr.config.SearchCondition;
 import com.pr.member.domain.MemberInfo;
 import com.pr.member.repository.MemberRepository;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class BoardService {
 
-    private final BoardRepository boardRepository;
+    private final ArticleRepository articleRepository;
     private final BoardRepositoryCustom boardRepositoryCustom;
     private final MemberRepository memberRepository;
 
@@ -33,7 +33,7 @@ public class BoardService {
     public Header<List<BoardDto>> getBoardList(Pageable pageable, SearchCondition searchCondition) {
         Page<Article> boardPage = boardRepositoryCustom.findAllBySearchCondition(pageable, searchCondition);
         // board_code가 "humor"인 게시글만 조회
-        List<Article> articles = boardRepository.findByBoardCodeAndDeleteYn("humor", "n");
+        List<Article> articles = articleRepository.findByBoardCodeAndDeleteYn("humor", "n");
         // 필터링된 결과를 페이지 처리합니다.
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), articles.size());
@@ -58,8 +58,8 @@ public class BoardService {
     public BoardDto getBoardDetail(Long id) {
         // ID로 게시글을 조회하여 BoardDto로 변환하여 반환
         Article article = findBoardById(id);
-        Long nextBoardId = boardRepository.findNextBoardId(article.getId()).orElse(null);
-        Long previousBoardId = boardRepository.findPreviousBoardId(article.getId()).orElse(null);
+        Long nextBoardId = articleRepository.findNextBoardId(article.getId()).orElse(null);
+        Long previousBoardId = articleRepository.findPreviousBoardId(article.getId()).orElse(null);
         return convertToDto(article, nextBoardId, previousBoardId);
     }
 
@@ -78,7 +78,7 @@ public class BoardService {
         boardDto.setBoardCode("humor");
         // BoardDto를 Board 엔티티로 변환하여 저장
         Article article = convertToEntity(boardDto);
-        Article savedArticle = boardRepository.save(article);
+        Article savedArticle = articleRepository.save(article);
 
         // 저장된 게시글의 ID로 상세 정보 조회하여 반환
         return getBoardDetail(savedArticle.getId());
@@ -90,7 +90,7 @@ public class BoardService {
         Article article = findBoardById(boardDto.getId());
         article.setTitle(boardDto.getTitle());
         article.setContent(boardDto.getContent());
-        boardRepository.save(article);
+        articleRepository.save(article);
         return convertToDto(article, null, null);
     }
 
@@ -98,14 +98,14 @@ public class BoardService {
 
     public void deleteBoard(Long id) {
         // Find the board by ID
-        Optional<Article> boardOptional = boardRepository.findById(id);
+        Optional<Article> boardOptional = articleRepository.findById(id);
 
         if (boardOptional.isPresent()) {
             Article article = boardOptional.get();
             // Update deleteYn to "y"
             article.setDeleteYn("y");
             // Save the updated board
-            boardRepository.save(article);
+            articleRepository.save(article);
         } else {
             throw new RuntimeException("Board not found with id: " + id);
         }
@@ -113,7 +113,7 @@ public class BoardService {
 
     // 게시글 유무 확인
     private Article findBoardById(Long id) {
-        return boardRepository.findById(id)
+        return articleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
     }
 
@@ -152,7 +152,7 @@ public class BoardService {
     public Header<List<BoardDto>> getBoardList(Pageable pageable) {
         List<BoardDto> dtos = new ArrayList<>();
 
-        Page<Article> boardEntities = boardRepository.findAllByOrderByIdDesc(pageable);
+        Page<Article> boardEntities = articleRepository.findAllByOrderByIdDesc(pageable);
         for (Article entity : boardEntities) {
             BoardDto dto = BoardDto.builder()
                     .id(entity.getId())

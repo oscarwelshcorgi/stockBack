@@ -1,69 +1,45 @@
 package com.pr.board.service;
 
+import com.pr.board.domain.Article;
 import com.pr.board.domain.Comment;
+import com.pr.board.repository.ArticleRepository;
 import com.pr.board.repository.CommentRepository;
-import lombok.RequiredArgsConstructor;
+import com.pr.member.domain.MemberInfo;
+import com.pr.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @Service
-@RequiredArgsConstructor
 public class CommentService {
 
-    private final CommentRepository commentRepository;
+    @Autowired
+    private CommentRepository commentRepository;
 
-    /**
-     * articleId를 기준으로 댓글 조회
-     *
-     * @param articleId 조회할 article의 ID
-     * @return 해당 article에 속한 모든 댓글 목록
-     */
+    @Autowired
+    private ArticleRepository articleRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
     public List<Comment> getCommentsByArticleId(Long articleId) {
-        return commentRepository.findByArticleId(articleId);
-    }
-
-    /**
-     * 댓글 생성
-     *
-     * @param comment 생성할 댓글 정보
-     * @return 생성된 댓글
-     */
-    public Comment createComment(Comment comment) {
-        // create_date와 update_date는 자동으로 설정됩니다.
-        return commentRepository.save(comment);
-    }
-
-    /**
-     * 댓글 수정
-     *
-     * @param id              수정할 댓글 ID
-     * @param updatedComment  수정된 댓글 정보
-     * @return 수정된 댓글
-     * @throws IllegalArgumentException 해당 ID를 가진 댓글이 없는 경우 예외 발생
-     */
-    public Comment updateComment(Long id, Comment updatedComment) {
-        Optional<Comment> optionalComment = commentRepository.findById(id);
-        if (optionalComment.isPresent()) {
-            Comment existingComment = optionalComment.get();
-            existingComment.setArticleId(updatedComment.getArticleId());
-            existingComment.setContent(updatedComment.getContent());
-            existingComment.setEmail(updatedComment.getEmail());
-            existingComment.setCommentDeleteYN(updatedComment.getCommentDeleteYN());
-            return commentRepository.save(existingComment);
-        } else {
-            throw new IllegalArgumentException("Comment not found with id: " + id);
+        List<Comment> comments = commentRepository.findByArticleIdAndDeleteYn(articleId, "N");
+        for (Comment comment : comments) {
+            MemberInfo memberInfo = memberRepository.findByEmail(comment.getEmail())
+                    .orElse(null);
+            if (memberInfo != null) {
+                comment.setNickName(memberInfo.getNickName());
+            }
         }
+        return comments;
     }
 
-    /**
-     * 댓글 삭제
-     *
-     * @param id 삭제할 댓글 ID
-     */
-    public void deleteComment(Long id) {
-        commentRepository.deleteById(id);
+    public Comment addComment(Comment comment) {
+        Article article = articleRepository.findById(comment.getArticle().getId())
+                .orElseThrow(() -> new NoSuchElementException("Article with ID " + comment.getArticle().getId() + " not found"));
+        comment.setArticle(article);
+        return commentRepository.save(comment);
     }
 }

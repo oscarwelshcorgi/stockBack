@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "article")
+@Table(name = "article1")
 @NoArgsConstructor
 public class Board {
 
@@ -56,6 +56,6 @@ public class Board {
     @PrePersist
     public void prePersist() {
         this.createDate = LocalDateTime.now(); // 엔티티가 저장되기 전에 작성 날짜 설정
-        this.deleteYn = "N";
+        this.deleteYn = "n";
     }
 }

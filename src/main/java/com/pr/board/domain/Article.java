@@ -7,11 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Entity
-@Table(name = "article")
+@Table(name = "article1")
 @NoArgsConstructor
 public class Article {
 
@@ -39,9 +38,6 @@ public class Article {
     @ManyToOne
     @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false)
     private MemberInfo memberInfo;
-
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
-    private List<Comment> comments;
 
     @Builder
     public Article(Long id, String title, String content, String email, LocalDateTime createDate, LocalDateTime updateDate, String deleteYn, int viewCount, String boardCode, MemberInfo memberInfo) {

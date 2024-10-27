@@ -1,7 +1,7 @@
 package com.pr.util.sitemap;
 
 import com.pr.board.domain.Article;
-import com.pr.board.repository.BoardRepository;
+import com.pr.board.repository.ArticleRepository;
 import jakarta.servlet.ServletContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class SitemapCreate {
-    private final BoardRepository boardRepository;
+    private final ArticleRepository articleRepository;
 
     private final ServletContext servletContext;
 
@@ -25,7 +25,7 @@ public class SitemapCreate {
     public void generateSitemap() {
         try {
             // 실제 sitemap 생성 로직
-            List<Article> articles = boardRepository.findAll();
+            List<Article> articles = articleRepository.findAll();
 
             // 절대 경로 얻기
             String rootPath = servletContext.getRealPath("/");

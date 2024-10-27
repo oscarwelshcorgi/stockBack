@@ -1,62 +1,33 @@
 package com.pr.board.domain;
 
-import com.pr.member.domain.MemberInfo;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-@Data
 @Entity
+@Data
 @Table(name = "comment")
 @NoArgsConstructor
 public class Comment {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, unique = true)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "articleId", referencedColumnName = "id")
-    private Long articleId;
+    @ManyToOne
+    @JoinColumn(name = "article_id", nullable = false)
+    private Article article;
 
-    @Column(name = "content", columnDefinition = "TEXT")
-    private String content;
-
-    @Column(name = "email", nullable = false, length = 30)
     private String email;
+    private String commentContent;
 
-    @Column(name = "commentDeleteYn", nullable = false, length = 5)
-    private String commentDeleteYN;
-
-    @Column(name = "createDate", nullable = false)
+    @CreationTimestamp
     private LocalDateTime createDate;
 
-    @Column(name = "updateDate", nullable = false)
-    private LocalDateTime updateDate;
+    private String deleteYn = "N";
 
-    @ManyToOne
-    @JoinColumn(name = "email", referencedColumnName = "email", insertable = false, updatable = false)
-    private MemberInfo memberInfo;
-
-    @Builder
-    public Comment(Long id, Long articleId, String content, String email, String commentDeleteYN, LocalDateTime createDate, LocalDateTime updateDate, MemberInfo memberInfo) {
-        this.id = id;
-        this.articleId = articleId;
-        this.content = content;
-        this.email = email;
-        this.commentDeleteYN = commentDeleteYN;
-        this.createDate = createDate;
-        this.updateDate = updateDate;
-        this.memberInfo = memberInfo;
-    }
-
-    @PrePersist
-    public void prePersist() {
-        this.createDate = LocalDateTime.now(); // 엔티티가 저장되기 전에 작성 날짜 설정
-        this.commentDeleteYN = "n";
-    }
+    @Transient // 데이터베이스에는 저장되지 않는 필드, 조회 시에만 설정됨
+    private String nickName;
 }
